@@ -1,5 +1,6 @@
 streamlit
 yfinance
-duckduckgo-search
 plotly
 pandas
+langchain-ollama
+langchain-community
