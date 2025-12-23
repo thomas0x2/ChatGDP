@@ -141,3 +141,33 @@ def calculate_dcf(fcf, growth_rate, shares, discount_rate=0.10, years=5, termina
     intrinsic_value_per_share = total_value / shares
     
     return intrinsic_value_per_share
+
+def calculate_implied_growth(current_price, fcf, shares, discount_rate=0.10, terminal_growth=0.03):
+    """
+    Calculates the implied growth rate that justifies the current stock price using a Reverse DCF.
+    Uses binary search to solve for growth rate.
+    """
+    if shares == 0 or current_price <= 0 or fcf <= 0:
+        return 0.0
+        
+    low = -0.50 # -50% growth
+    high = 1.00 # 100% growth
+    tolerance = 0.001
+    max_iterations = 100
+    
+    for _ in range(max_iterations):
+        mid = (low + high) / 2
+        estimated_value = calculate_dcf(fcf, mid, shares, discount_rate, terminal_growth=terminal_growth)
+        
+        diff = estimated_value - current_price
+        
+        if abs(diff) < tolerance:
+            return mid
+            
+        # If estimated value is typically higher than price, it means our growth assumption is too high
+        if estimated_value > current_price:
+            high = mid
+        else:
+            low = mid
+            
+    return (low + high) / 2

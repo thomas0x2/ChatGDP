@@ -31,6 +31,15 @@ def verify_logic(ticker="AAPL"):
     val = logic.calculate_dcf(data['fcf'], scenarios['base'], data['shares'])
     print(f"Calculated Base Value: {val}")
     
+    # 5. Reverse DCF
+    print("Calculating Reverse DCF...")
+    implied_growth = logic.calculate_implied_growth(data['price'], data['fcf'], data['shares'])
+    print(f"Market Implied Growth Rate: {implied_growth*100:.2f}%")
+    
+    # Sanity Check: If we plug implied growth back into DCF, we should get current price
+    check_val = logic.calculate_dcf(data['fcf'], implied_growth, data['shares'])
+    print(f"Sanity Check (DCF with implied rate): {check_val:.2f} (Should be close to price: {data['price']})")
+    
     print("--- Verification Complete ---")
 
 if __name__ == "__main__":

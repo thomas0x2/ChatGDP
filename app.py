@@ -66,6 +66,10 @@ if run_btn:
         bull_val = logic.calculate_dcf(fcf, scenarios['bull'], shares)
         base_val = logic.calculate_dcf(fcf, scenarios['base'], shares)
         bear_val = logic.calculate_dcf(fcf, scenarios['bear'], shares)
+        
+        # 5. Reverse DCF (Implied Growth)
+        implied_growth = logic.calculate_implied_growth(current_price, fcf, shares)
+
 
     # --- Display Results ---
     
@@ -88,6 +92,11 @@ if run_btn:
     with col4:
         delta = ((bull_val - current_price) / current_price) * 100
         st.metric("Bull Value (High Growth)", f"{currency} {bull_val:,.2f}", f"{delta:.2f}%")
+        
+    # Reverse DCF Metric
+    st.markdown("### Reverse DCF Analysis")
+    st.info(f"The market price implies the company will grow Free Cash Flow at **{implied_growth*100:.2f}%** per year for the next 5 years.")
+
 
     st.markdown("---")
     
